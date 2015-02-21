@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{Blogs.title}}</title>
+    <style>
+      .container{
+      padding:10px
+      }
+      a.btn{
+      padding-left:10px
+      }
+      a.label-comments{
+      text-align:center;
+      vertical-align:middle; 
+      float:center;
+      }
+      .user{
+      float:right;
+      }
+      .body-extras{
+      padding-left:10px;
+      float:left;
+      }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{Blogs.title}}</h3>
+        </div>
+        <div class="panel-body">
+          {{Blogs.body}}
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <a class="label-comments"><span class="badge">{{ Blogs.comments }}</span>Comments</a> 
+      <a class="label-comments"><span class="badge">  {{ Blogs.upvotes }}</span>Votes</a> 
+      <label style="text-align:right ; display:block">Submitted at {{ Blogs.date_created}}</label>
+      <hr>
+    </div>
+    
+    <!-- add an image(glyphicon) to the button -->
+    <div class="container">
+      <a href="#" class="btn btn-success btn-lg"> <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Upvote</a>
+      <a href="#" class="btn btn-warning btn-lg"> <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> Downvote</a>
+      <div class="user">
+        <label>submitted by <a href="#">{{Blogs.name}}</a></label>   
+      </div>
+    </div>
+    <!--from here code will be with jinja2 for all comments on the post -->
+    
+    <div class="container">
+    <hr>
+    <form method="post" role="form">
+      <div class="form-group">
+        <label for="text">Post a Comment</label>
+        <div class="form-group">
+          <textarea class="form-control" rows="5" name="body" id="comment"></textarea>
+        </div>
+      </div>
+    </form >
+    </div>
+    {% for Variable in Commentspost %}
+    <div class="container">
+      <label><a href="#">{{ Variable.name }}</a></label>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {{ Variable.comments_data }}
+        </div>
+      </div>
+      <label style="text-align:right ; display:block">{{ Variable.posted_date }}</label>
+      <hr>
+    </div>
+    {% endfor %}
+  </body>
+</html>
+

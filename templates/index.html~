@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MY blog</title>
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <style>
+      table {
+      width: 100%;
+      }
+      th.from, th.subject {
+      width: 15%
+      }
+      th.date {
+      width: 70%; /* Not necessary, since only 70% width remains */
+      }
+      .somedata{
+      text-align:right;
+      display:block;
+      }
+      .body-extras{
+      padding-left:10px;
+      float:left;
+      }
+      #login-link {
+       padding: .4em 1em .4em 20px;
+       text-decoration: none;
+       position: relative;
+      }
+      #loginwithButton {
+        padding: .4em 1em .4em 20px;
+      }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!--<script src="js/myjs.js"></script>-->
+    
+  </head>
+  <body>
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=930005313685688&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  <!--div for loginwith dialog -->
+  
+  
+  <div id="dialog" title="Login With">
+    <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
+  </div>
+
+  <!--div for header -->
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Home</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="createblog.html">Create Blog <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">My Blogs</a></li>
+              <li>
+                <a href="#">Dropdown </a>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#" id="login-link">Login </a></li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+    
+    <!-- div for blog body in mainpage-->    
+      <hr>
+      {% for Data in postData %}
+      <div class="container">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a href="/blogpost/{{Data.p_id}}">
+              <h3 class="panel-title">{{Data.title}}</h3>
+            </a>
+          </div>
+          <div class="panel-body">
+            <h6 class="body-extras"><a href="#" style="color: #808080">{{Data.comments}} comments</a></h6>
+            <h6 class="body-extras"><a href="#" style="color: #808080">{{Data.upvotes}} votes</a></h6>
+            <h6 class="body-extras">submitted on {{Data.date_created}} by <a href="#">{{Data.name}}</a></h6>
+          </div>
+        </div>
+        <hr>
+      </div>
+      {% endfor %}  
+ <script src="js/jquery.jss"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script>
+    $("#dialog").dialog({
+        autoOpen: false,
+        width: 400, 
+        buttons:[ 
+          {
+            text:"Ok",
+            click: function(){
+              $(this).dialog("close");  
+            }
+          }
+         ]  
+        });
+    $("#login-link").click(function(event){
+      $("#dialog").dialog("open");
+      event.preventDefault();
+    });  
+  </script>
+  <script>
+  // This is called with the results from from FB.getLoginStatus().
+  function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      console.log('in connected state');
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // The person is logged into Facebook, but not your app.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    } else {
+      // The person is not logged into Facebook, so we're not sure if
+      // they are logged into this app or not.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into Facebook.';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '930005313685688',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.1' // use version 2.1
+  });
+
+  // Now that we've initialized the JavaScript SDK, we call 
+  // FB.getLoginStatus().  This function gets the state of the
+  // person visiting this page and can return one of three states to
+  // the callback you provide.  They can be:
+  //
+  // 1. Logged into your app ('connected')
+  // 2. Logged into Facebook, but not your app ('not_authorized')
+  // 3. Not logged into Facebook and can't tell if they are logged into
+  //    your app or not.
+  //
+  // These three cases are handled in the callback function.
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      console.log(JSON.stringify(response));
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, ' + response.name + '!';
+    });
+  }
+</script>
+</html>

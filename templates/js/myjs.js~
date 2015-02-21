@@ -1,0 +1,4 @@
+$("#loginwth").hide();
+$("#loginbutton").click(function(){
+  $("#loginwth").dialog();
+});
